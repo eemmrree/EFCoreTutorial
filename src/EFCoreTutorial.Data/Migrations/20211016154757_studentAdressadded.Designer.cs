@@ -4,14 +4,16 @@ using EFCoreTutorial.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFCoreTutorial.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211016154757_studentAdressadded")]
+    partial class studentAdressadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,10 +56,6 @@ namespace EFCoreTutorial.Data.Migrations
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AddressesId")
-                        .HasColumnType("int")
-                        .HasColumnName("address_id");
-
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("birth_date");
@@ -77,9 +75,6 @@ namespace EFCoreTutorial.Data.Migrations
                         .HasColumnName("number");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressesId")
-                        .IsUnique();
 
                     b.ToTable("students");
                 });
@@ -114,7 +109,14 @@ namespace EFCoreTutorial.Data.Migrations
                         .HasColumnType("nvarchar(300)")
                         .HasColumnName("fullAddress");
 
+                    b.Property<int>("StudentID")
+                        .HasColumnType("int")
+                        .HasColumnName("student_id");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("StudentID")
+                        .IsUnique();
 
                     b.ToTable("student_adresses");
                 });
@@ -148,21 +150,21 @@ namespace EFCoreTutorial.Data.Migrations
                     b.ToTable("teachers");
                 });
 
-            modelBuilder.Entity("EFCoreTutorial.Data.Models.Student", b =>
+            modelBuilder.Entity("EFCoreTutorial.Data.Models.StudentAddress", b =>
                 {
-                    b.HasOne("EFCoreTutorial.Data.Models.StudentAddress", "Address")
-                        .WithOne("Student")
-                        .HasForeignKey("EFCoreTutorial.Data.Models.Student", "AddressesId")
-                        .HasConstraintName("student_adress_student_id_fk")
+                    b.HasOne("EFCoreTutorial.Data.Models.Student", "Student")
+                        .WithOne("Address")
+                        .HasForeignKey("EFCoreTutorial.Data.Models.StudentAddress", "StudentID")
+                        .HasConstraintName("student_adress_id_fk")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
+                    b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("EFCoreTutorial.Data.Models.StudentAddress", b =>
+            modelBuilder.Entity("EFCoreTutorial.Data.Models.Student", b =>
                 {
-                    b.Navigation("Student");
+                    b.Navigation("Address");
                 });
 #pragma warning restore 612, 618
         }

@@ -66,6 +66,9 @@ namespace EFCoreTutorial.Data.Context
                 entity.Property(i => i.LastName).HasColumnName("last_name").HasColumnType("nvarchar").HasMaxLength(250);
                 entity.Property(i => i.BirthDate).HasColumnName("birth_date");
                 entity.Property(i => i.Number).HasColumnName("number");
+                entity.Property(i => i.AddressesId).HasColumnName("address_id");
+
+             
             });
 
             modelBuilder.Entity<Teacher>(entity =>
@@ -85,6 +88,23 @@ namespace EFCoreTutorial.Data.Context
                 entity.Property(i => i.Id).HasColumnName("id").UseIdentityColumn();
                 entity.Property(i => i.Name).HasColumnName("name").HasColumnType("nvarchar").HasMaxLength(100);
                 entity.Property(i => i.IsActive).HasColumnName("is_active");
+            });
+            modelBuilder.Entity<StudentAddress>(entity =>
+            {
+                entity.ToTable("student_adresses");
+
+                entity.Property(i => i.Id).HasColumnName("id").UseIdentityColumn();
+                entity.Property(i => i.City).HasColumnName("city").HasMaxLength(50);
+                entity.Property(i => i.District).HasColumnName("district").HasMaxLength(100);
+                entity.Property(i => i.Country).HasColumnName("country").HasMaxLength(50);
+                entity.Property(i => i.FullAddress).HasColumnName("fullAddress").HasMaxLength(300);
+
+                entity.HasOne(i => i.Student)
+                    .WithOne(i => i.Address)
+                    .HasForeignKey<Student>(i => i.AddressesId)
+                    .HasConstraintName("student_adress_student_id_fk");
+
+
             });
 
             base.OnModelCreating(modelBuilder);
