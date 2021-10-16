@@ -67,8 +67,12 @@ namespace EFCoreTutorial.Data.Context
                 entity.Property(i => i.BirthDate).HasColumnName("birth_date");
                 entity.Property(i => i.Number).HasColumnName("number");
                 entity.Property(i => i.AddressesId).HasColumnName("address_id");
+                entity.HasMany(i => i.Books)
+                    .WithOne(i => i.Student)
+                    .HasForeignKey(i => i.StudentId)
+                    .HasConstraintName("student_book_id_fk");
 
-             
+
             });
 
             modelBuilder.Entity<Teacher>(entity =>

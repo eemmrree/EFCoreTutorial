@@ -18,5 +18,7 @@ namespace EFCoreTutorial.Data.Models
         public int AddressesId { get; set; }
 
         public virtual StudentAddress Address { get; set; }
+
+        public ICollection<Book> Books { get; set; }
     }
 }
