@@ -23,8 +23,41 @@ namespace EFCoreTutorial.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-           var students= await applicationDbContext.Students.ToListAsync();
-           return Ok(students);
+            StudentFilter sf = new StudentFilter() {FirstName = "emre"};
+
+            var student = applicationDbContext.Students.AsQueryable();
+
+            if (!string.IsNullOrEmpty(sf.FirstName))
+                student = student.Where(i => i.FirstName == sf.FirstName);
+            if (!string.IsNullOrEmpty(sf.LastName))
+                student = student.Where(i => i.LastName == sf.LastName);
+            if (sf.Number.HasValue)
+                student = student.Where(i => i.Number == sf.Number);
+
+            var list =await student.ToListAsync();
+
+
+
+            var allStudents = await applicationDbContext.Students.ToListAsync();
+
+
+
+            var lastNameFilter = await applicationDbContext.Students
+                .Where(i => i.LastName == "bayrak" /*&& i.FirstName!="fatma"*/)
+                .Where(i=>i.FirstName=="fatma")
+                .OrderByDescending(i=>i.Number)
+                .ToListAsync();
+
+
+
+            var studentsFilter = await applicationDbContext.Students
+                .Select(i => i.FirstName)
+                .ToListAsync();
+
+
+
+            var students = await applicationDbContext.Students.ToListAsync();
+            return Ok();
         }
 
         [HttpPost]
@@ -58,13 +91,13 @@ namespace EFCoreTutorial.WebApi.Controllers
             await applicationDbContext.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete ("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var student = await applicationDbContext.Students.FirstOrDefaultAsync(i => i.Id ==id);
+            var student = await applicationDbContext.Students.FirstOrDefaultAsync(i => i.Id == id);
             //var student = await applicationDbContext.Students.FindAsync(id);
             //var student = await applicationDbContext.Students.Where(i => i.Id == id).SingleOrDefaultAsync();
-            
+
             applicationDbContext.Students.Remove(student);
             await applicationDbContext.SaveChangesAsync();
             return Ok();
@@ -75,15 +108,16 @@ namespace EFCoreTutorial.WebApi.Controllers
         {
             var student = await applicationDbContext.Students.FirstOrDefaultAsync();
 
-            
+
             student.FirstName = "Updated";
             student.LastName = "Updated";
 
 
-            
+
             await applicationDbContext.SaveChangesAsync();
             return Ok();
         }
+
 
     }
 }
