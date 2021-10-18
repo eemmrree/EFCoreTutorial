@@ -38,6 +38,7 @@ namespace EFCoreTutorial.WebApi
             services.AddLogging();
             services.AddDbContext<ApplicationDbContext>(conf =>
             {
+                conf.UseLazyLoadingProxies();
                 conf.UseSqlServer(StringConstants.DbConnectionString);
                 conf.EnableSensitiveDataLogging();
             });
