@@ -11,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFCoreTutorial.Common;
+using EFCoreTutorial.Data.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFCoreTutorial.WebApi
 {
@@ -31,6 +34,12 @@ namespace EFCoreTutorial.WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EFCoreTutorial.WebApi", Version = "v1" });
+            });
+            services.AddLogging();
+            services.AddDbContext<ApplicationDbContext>(conf =>
+            {
+                conf.UseSqlServer(StringConstants.DbConnectionString);
+                conf.EnableSensitiveDataLogging();
             });
         }
 
