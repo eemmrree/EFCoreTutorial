@@ -13,4 +13,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EFCoreTutorial.Common\EFCoreTutorial.Common\EFCoreTutorial.Common.csproj" />
+  </ItemGroup>
+
 </Project>

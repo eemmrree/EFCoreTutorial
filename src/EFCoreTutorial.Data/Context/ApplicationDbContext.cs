@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EFCoreTutorial.Common;
 using EFCoreTutorial.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,12 +28,14 @@ namespace EFCoreTutorial.Data.Context
         public DbSet<Course> Courses { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Student> Students { get; set; }
+
+        public DbSet<StudentAddress> StudentAddresses { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
                 //make the configurations
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-H6JU5SG\\SQLEXPRESS;Initial Catalog=efcore;Integrated Security=True");
+                optionsBuilder.UseSqlServer(StringConstants.DbConnectionString);
             }
 
             //var list = Courses.Where(i => i.Name == "English").Select(i => i.Name).ToList();
