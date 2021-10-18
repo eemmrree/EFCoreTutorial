@@ -20,10 +20,32 @@ namespace EFCoreTutorial.WebApi.Controllers
             this.applicationDbContext = applicationDbContext;
         }
 
-        [HttpGet]
+        private async Task eagerLoadings()
+        {
+
+            //Eager Loading
+            var student = await applicationDbContext.Students
+                .Include(i => i.Books)
+                //.ThenInclude(i=>i.eklenecekYer)
+                .FirstOrDefaultAsync(i => i.Id == 5);
+
+
+        }
+
+        private async Task lazyLoadings()
+        {
+            var student = await applicationDbContext.Students.FirstOrDefaultAsync(i => i.Id == 5);
+            var books = student.Books;
+        }
+            
+        
+        [HttpGet] 
         public async Task<IActionResult> Get()
         {
-            StudentFilter sf = new StudentFilter() {FirstName = "emre"};
+            await lazyLoadings();
+            return null;
+
+            StudentFilter sf = new StudentFilter() { FirstName = "emre" };
 
             var student = applicationDbContext.Students.AsQueryable();
 
@@ -34,7 +56,7 @@ namespace EFCoreTutorial.WebApi.Controllers
             if (sf.Number.HasValue)
                 student = student.Where(i => i.Number == sf.Number);
 
-            var list =await student.ToListAsync();
+            var list = await student.ToListAsync();
 
 
 
@@ -44,8 +66,8 @@ namespace EFCoreTutorial.WebApi.Controllers
 
             var lastNameFilter = await applicationDbContext.Students
                 .Where(i => i.LastName == "bayrak" /*&& i.FirstName!="fatma"*/)
-                .Where(i=>i.FirstName=="fatma")
-                .OrderByDescending(i=>i.Number)
+                .Where(i => i.FirstName == "fatma")
+                .OrderByDescending(i => i.Number)
                 .ToListAsync();
 
 
